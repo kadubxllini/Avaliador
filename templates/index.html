@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Avaliador</title>
+</head>
+
+<body>
+    <!--TÍTULO-->
+    <div class="container">
+        <h1>Super Avaliante 10.000</h1>
+        
+        <!--PARTE INTERAGÍVEL-->
+        <form action="/adicionar" method="POST">
+            <label>Nome da Obra:</label>
+            <input type="text" name="titulo" required>
+            
+            <label>Categoria:</label>
+            <select name="categoria">
+                <option value="Filme">Filme</option>
+                <option value="Série">Série</option>
+                <option value="Jogo">Jogo</option>
+            </select>
+
+            <label>Nota (<span class="numbers-label">0.5 a 5.0</span>):</label>
+            <input type="number" name="nota" step="0.5" min="0.5" max="5.0" required>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="coracao" name="coracao" value="1">
+                <label for="coracao">Marcar como favorito (❤️)</label>
+            </div>
+            
+            <button type="submit">Salvar Avaliação</button>
+        </form>
+    </div>
+
+    <!--HISTÓRICO DE AVALIAÇÕES-->
+    <div class="lista-avaliacoes">
+        <h2>Minhas Avaliações</h2>
+        {% for item in avaliacoes %}
+        <div class="card">
+            <!--DELETAR AVALIAÇÃO-->
+            <div class="card-header">
+                <span>{{ item.categoria }}</span>
+                <form action="/deletar/{{ item.id }}" method="POST" class="delete-form" onsubmit="return confirm('Tem certeza que deseja deletar esta avaliação?')">
+                    <button title="Deletar" type="submit" class="delete-btn">×</button>
+                </form>
+            </div>
+            <!--------------------->
+            <div class="card-body">
+                <span>{{ item.titulo }}</span>
+                {% if item.coracao %}
+                    <span title="Favorito">❤️</span>
+                {% endif %}
+            </div>
+            <div class="container-nota">
+                <span class="card-nota">Nota:</span>
+                <span class="card-nota-num">{{ item.nota }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
